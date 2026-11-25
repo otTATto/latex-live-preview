@@ -1,5 +1,4 @@
 import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist';
-import type { PDFDocumentLoadingTask, PDFDocumentProxy } from 'pdfjs-dist';
 import {
   type BuildStatus,
   PDF_PATH,
@@ -7,6 +6,7 @@ import {
   STATUS_EVENT,
   STATUS_PATH,
 } from '../src/protocol.ts';
+import type { PDFDocumentLoadingTask, PDFDocumentProxy } from 'pdfjs-dist';
 
 GlobalWorkerOptions.workerSrc = `${PDFJS_ASSETS_PATH}/build/pdf.worker.min.mjs`;
 
@@ -110,7 +110,8 @@ const renderPage = async (slot: HTMLElement): Promise<void> => {
   slot.dataset.gen = String(current.gen);
   try {
     const page = await current.pdf.getPage(Number(slot.dataset.page));
-    const scale = (slot.clientWidth / page.getViewport({ scale: 1 }).width) * (window.devicePixelRatio || 1);
+    const scale =
+      (slot.clientWidth / page.getViewport({ scale: 1 }).width) * (window.devicePixelRatio || 1);
     const viewport = page.getViewport({ scale });
     const canvas = document.createElement('canvas');
     canvas.width = Math.floor(viewport.width);
@@ -127,7 +128,8 @@ const renderPage = async (slot: HTMLElement): Promise<void> => {
 const observer = new IntersectionObserver(
   (entries) => {
     for (const entry of entries) {
-      if (entry.isIntersecting && entry.target instanceof HTMLElement) void renderPage(entry.target);
+      if (entry.isIntersecting && entry.target instanceof HTMLElement)
+        void renderPage(entry.target);
     }
   },
   { rootMargin: '100% 0px' },

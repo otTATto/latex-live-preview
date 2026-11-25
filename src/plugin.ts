@@ -2,7 +2,6 @@ import { spawn } from 'node:child_process';
 import { createReadStream, existsSync, readFileSync, statSync, watch } from 'node:fs';
 import { createRequire } from 'node:module';
 import { basename, dirname, extname, join, normalize, sep } from 'node:path';
-import type { Plugin } from 'vite';
 import {
   type BuildStatus,
   PDF_PATH,
@@ -10,10 +9,28 @@ import {
   STATUS_EVENT,
   STATUS_PATH,
 } from './protocol.ts';
+import type { Plugin } from 'vite';
 
 const INTERMEDIATE_EXTS = new Set([
-  '.aux', '.bbl', '.blg', '.dvi', '.fdb_latexmk', '.fls', '.idx', '.ilg', '.ind',
-  '.lof', '.log', '.lot', '.nav', '.out', '.snm', '.tmp', '.toc', '.vrb', '.xdv',
+  '.aux',
+  '.bbl',
+  '.blg',
+  '.dvi',
+  '.fdb_latexmk',
+  '.fls',
+  '.idx',
+  '.ilg',
+  '.ind',
+  '.lof',
+  '.log',
+  '.lot',
+  '.nav',
+  '.out',
+  '.snm',
+  '.tmp',
+  '.toc',
+  '.vrb',
+  '.xdv',
 ]);
 
 // エディタの 1 回の保存で複数の変更イベントが届くため、少し待ってから 1 回だけビルドする
@@ -85,7 +102,9 @@ export const llp = ({ texPath }: { texPath: string }): Plugin => {
             setStatus({ state: 'ok', version: status.version + 1 });
           } else {
             const error = extractError(logPath, output);
-            logger.error(`❌ build failed in ${seconds}s: ${summarizeError(error)}`, { timestamp: true });
+            logger.error(`❌ build failed in ${seconds}s: ${summarizeError(error)}`, {
+              timestamp: true,
+            });
             setStatus({ ...status, state: 'error', error });
           }
           if (pending) {
