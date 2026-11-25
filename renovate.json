@@ -1,0 +1,16 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "description": "頻度を週 1 にしたいので金曜の午前 0 ～ 8 時のみ作成可能とする",
+  "timezone": "Asia/Tokyo",
+  "schedule": ["* 0-8 * * 5"],
+  "minimumReleaseAge": "3 days",
+  "packageRules": [
+    {
+      "description": "開発用依存の minor または patch 更新なら 1 PR にまとめる",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "devDependencies (non-major)"
+    }
+  ]
+}
