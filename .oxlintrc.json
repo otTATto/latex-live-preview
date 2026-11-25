@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  // src と bin は Node、client はブラウザで動く
+  // bin と server は Node、client はブラウザで動く (shared は両方)
   "env": {
     "browser": true,
     "node": true

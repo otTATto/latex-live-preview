@@ -2,8 +2,8 @@
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createLogger, createServer } from 'vite';
-import { llp } from '../src/plugin.ts';
-import { resolveTexPath } from '../src/root.ts';
+import { llp } from '../server/plugin.ts';
+import { resolveTexPath } from '../server/root.ts';
 
 // Vite 自身のログもこのロガーを通るので、すべて [llp] として表示される
 const logger = createLogger('info', { prefix: '[llp]' });

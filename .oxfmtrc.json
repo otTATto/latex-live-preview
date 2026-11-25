@@ -20,8 +20,8 @@
       - side effect: e.g. import './style.css'
       - builtin    : e.g. from 'node:fs'
       - external   : e.g. from 'vite'
-      - parent     : e.g. from '../src/protocol.ts'
-      - sibling    : e.g. from './protocol.ts'
+      - parent     : e.g. from '../shared/protocol.ts'
+      - sibling    : e.g. from './latexmk.ts'
       - type       : e.g. import type { Plugin } from 'vite'
       - unknown
     */

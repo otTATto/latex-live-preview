@@ -14,5 +14,5 @@
     "checkJs": true,
     "skipLibCheck": true
   },
-  "include": ["bin", "src", "client"]
+  "include": ["bin", "server", "shared", "client"]
 }

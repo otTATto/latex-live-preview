@@ -1,18 +1,14 @@
+/**
+ * @file llp に渡されたパスから、ビルドの起点となる .tex ファイルを決める
+ */
+
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import { isCancel, select } from '@clack/prompts';
+import { isIgnoredName } from './watcher.ts';
 
 // コメントアウトされた \documentclass は数えない
 const DOCUMENTCLASS_PATTERN = /^[^%\n]*\\documentclass\b/m;
-
-/**
- * @function 探索や監視の対象から外すファイル・ディレクトリかどうかを判定する
- *
- * @param name パスを区切ったうちの 1 つの名前
- * @returns 隠しファイル・隠しディレクトリ・node_modules なら true
- */
-export const isIgnoredName = (name: string): boolean =>
-  name.startsWith('.') || name === 'node_modules';
 
 /**
  * @function llp に渡されたパスから、ビルドする .tex ファイルを決める

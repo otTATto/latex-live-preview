@@ -5,7 +5,7 @@ import {
   PDFJS_ASSETS_PATH,
   STATUS_EVENT,
   STATUS_PATH,
-} from '../src/protocol.ts';
+} from '../shared/protocol.ts';
 import type { PDFDocumentLoadingTask, PDFDocumentProxy } from 'pdfjs-dist';
 
 GlobalWorkerOptions.workerSrc = `${PDFJS_ASSETS_PATH}/build/pdf.worker.min.mjs`;
