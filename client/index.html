@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>llp</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <!-- data-state はビルドの状態 (building | ok | error)。各要素の表示・非表示は style.css が決める -->
+  <body data-state="building">
+    <p id="building" role="status">Building…</p>
+    <pre id="build-error" role="alert"></pre>
+    <main id="pages"></main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
