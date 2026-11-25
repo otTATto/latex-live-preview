@@ -63,6 +63,7 @@ export const llp = ({ texPath }: { texPath: string }): Plugin => {
     configureServer(server) {
       const { logger } = server.config;
       logger.info(`👀 watching: ${dir}`, { timestamp: true });
+      logger.info(`📄 target: ${texName}`, { timestamp: true });
 
       const setStatus = (next: BuildStatus) => {
         status = next;
