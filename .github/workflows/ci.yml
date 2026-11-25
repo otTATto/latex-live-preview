@@ -39,3 +39,28 @@ jobs:
 
       - name: Format
         run: npm run format:check
+
+  test:
+    name: Test (${{ matrix.os }})
+    # パスの区切りやファイル監視の振る舞いが OS で異なるため、Windows でも確かめる
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          HUSKY: 0
+
+      - name: Test
+        run: npm test

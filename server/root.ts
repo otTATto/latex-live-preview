@@ -14,6 +14,7 @@ const DOCUMENTCLASS_PATTERN = /^[^%\n]*\\documentclass\b/m;
  * @function llp に渡されたパスから、ビルドする .tex ファイルを決める
  *
  * @param target llp に渡されたパス（省略されたらカレントディレクトリ）
+ * @param options.interactive 候補が複数あるときに選ばせるかどうか（省略されたら端末の状態で決める）
  * @returns ビルドする .tex ファイルの絶対パス または null
  *
  * NOTE:
@@ -22,7 +23,10 @@ const DOCUMENTCLASS_PATTERN = /^[^%\n]*\\documentclass\b/m;
  *     - 対話できるとき: 選択肢を表示して選ばせる
  *     - そうでないとき: 候補を添えたエラーを投げる
  */
-export const resolveTexPath = async (target = '.'): Promise<string | null> => {
+export const resolveTexPath = async (
+  target = '.',
+  { interactive = isInteractive() } = {},
+): Promise<string | null> => {
   const path = resolve(target);
   const stat = statSync(path, { throwIfNoEntry: false });
   if (!stat) throw new Error(`no such file or directory: ${path}`);
@@ -33,7 +37,7 @@ export const resolveTexPath = async (target = '.'): Promise<string | null> => {
   if (roots.length === 1) return roots[0];
 
   const options = roots.map((root) => ({ value: root, label: relative(path, root) }));
-  if (!isInteractive()) {
+  if (!interactive) {
     const list = options.map(({ label }) => `  - ${label}`).join('\n');
     throw new Error(`multiple root .tex files found; specify one of them:\n${list}`);
   }

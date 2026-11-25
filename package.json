@@ -11,11 +11,13 @@
     "bin",
     "server",
     "shared",
-    "client"
+    "client",
+    "!**/*.test.ts"
   ],
   "license": "MIT",
   "scripts": {
     "typecheck": "tsc",
+    "test": "node --test \"server/**/*.test.ts\"",
     "lint": "oxlint .",
     "lint:fix": "oxlint --fix .",
     "format": "oxfmt --write .",
