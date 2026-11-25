@@ -1,0 +1,46 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  // インデントのサイズはスペース 2 つ
+  "tabWidth": 2,
+  // 半角スペースによるインデント
+  "useTabs": false,
+  // 末尾にセミコロン
+  "semi": true,
+  // 文字列の囲みはシングルクォーテーション
+  "singleQuote": true,
+  // オブジェクトのプロパティ内に引用符の必要なプロパティがある場合は
+  // すべてのプロパティに引用符を付ける
+  "quoteProps": "consistent",
+  // 折り返す文字数
+  "printWidth": 100,
+  // import の並び順
+  "sortImports": {
+    /*
+      import の並び順とグルーピングのルール
+      - side effect: e.g. import './style.css'
+      - builtin    : e.g. from 'node:fs'
+      - external   : e.g. from 'vite'
+      - parent     : e.g. from '../src/protocol.ts'
+      - sibling    : e.g. from './protocol.ts'
+      - type       : e.g. import type { Plugin } from 'vite'
+      - unknown
+    */
+    "groups": [
+      ["side_effect_style", "side_effect"],
+      "value-builtin",
+      "value-external",
+      "value-parent",
+      "value-sibling",
+      "type",
+      "unknown"
+    ],
+    // グループ間の改行なし
+    "newlinesBetween": false,
+    // グループ内は ABC 順
+    "order": "asc"
+  },
+  // package.json のキー順は自動変更しない
+  "sortPackageJson": false,
+  // npm が生成するロックファイルは Formatter 対象外
+  "ignorePatterns": ["package-lock.json"]
+}

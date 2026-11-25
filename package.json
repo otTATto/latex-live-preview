@@ -14,7 +14,12 @@
   ],
   "license": "MIT",
   "scripts": {
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
+    "prepare": "husky"
   },
   "dependencies": {
     "pdfjs-dist": "^6.5.438",
@@ -22,6 +27,17 @@
   },
   "devDependencies": {
     "@types/node": "^26.6.7",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.2",
+    "oxfmt": "^0.80.0",
+    "oxlint": "^1.95.0",
     "typescript": "^7.0.2"
+  },
+  "lint-staged": {
+    "*.{js,mjs,ts,mts}": [
+      "oxlint --fix",
+      "oxfmt --write"
+    ],
+    "*.{css,html,json,md,yaml,yml}": "oxfmt --write"
   }
 }

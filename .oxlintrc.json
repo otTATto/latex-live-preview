@@ -1,0 +1,39 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  // src と bin は Node、client はブラウザで動く
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  /*
+    プラグイン
+    - eslint    : JavaScript の基本ルール
+    - typescript: TypeScript のルール
+    - unicorn   : 書き方の改善を促すルール
+    - oxc       : Oxc 独自のルール
+    - import    : import に関するルール
+  */
+  "plugins": ["eslint", "typescript", "unicorn", "oxc", "import"],
+  "rules": {
+    // 使われていない変数と import を検出する
+    "no-unused-vars": [
+      "error",
+      {
+        // `_` から始まる変数・引数・catch 変数は意図的に未使用として扱う
+        "argsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "fix": {
+          // `oxlint --fix` で安全に削除できる未使用 import のみ削除する
+          "imports": "safe-fix",
+          // 未使用変数は意図せず処理を変えないよう自動削除しない
+          "variables": "off"
+        }
+      }
+    ],
+    // 同じモジュールから重複して import することを禁止する
+    "import/no-duplicates": "error",
+    "typescript/no-explicit-any": "error",
+    "typescript/ban-ts-comment": "error"
+  }
+}
