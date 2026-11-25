@@ -21,7 +21,7 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
    llp path/to/main.tex
    ```
 
-4. ブラウザが開いて PDF が表示される
+4. ブラウザが開いて PDF [^output] が表示される
 5. 以降は `.tex` を保存するたびに表示が更新される
 
 [^npm]: 将来的には npm パッケージとして公開する予定なので、1 と 2 の手順はもっと簡単になります。
@@ -41,7 +41,9 @@ npm rm -g @ottatto/llp
 1. `.tex` のあるディレクトリ以下を監視し、ファイルの変更を検知する
 2. `.tex` のあるディレクトリで [Latexmk](https://texwiki.texjp.org/?Latexmk) を実行する
 3. コンパイルの結果を、[Vite](https://ja.vite.dev/) の WebSocket でブラウザに通知する
-4. ブラウザは [PDF.js](https://mozilla.github.io/pdf.js/) で PDF を読み込み直し、見えているページから描画する
+4. ブラウザは [PDF.js](https://mozilla.github.io/pdf.js/) で PDF [^output] を読み込み直し、見えているページから描画する
+
+[^output]: PDF は `.tex` と同じ場所に生成され、中間ファイルは `.llp/` 内に生成されます。したがって、`latexmkrc` に書いた `'$out_dir` や `$aux_dir` は**無視されます**。
 
 ## 📖 ライセンス
 

@@ -1,5 +1,14 @@
 import { spawn } from 'node:child_process';
-import { createReadStream, existsSync, readFileSync, statSync, watch } from 'node:fs';
+import {
+  copyFileSync,
+  createReadStream,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  statSync,
+  watch,
+  writeFileSync,
+} from 'node:fs';
 import { createRequire } from 'node:module';
 import { basename, dirname, extname, join, normalize, sep } from 'node:path';
 import {
@@ -11,27 +20,8 @@ import {
 } from './protocol.ts';
 import type { Plugin } from 'vite';
 
-const INTERMEDIATE_EXTS = new Set([
-  '.aux',
-  '.bbl',
-  '.blg',
-  '.dvi',
-  '.fdb_latexmk',
-  '.fls',
-  '.idx',
-  '.ilg',
-  '.ind',
-  '.lof',
-  '.log',
-  '.lot',
-  '.nav',
-  '.out',
-  '.snm',
-  '.tmp',
-  '.toc',
-  '.vrb',
-  '.xdv',
-]);
+// latexmk の生成物が入るディレクトリ
+const OUT_DIR_NAME = '.llp';
 
 // エディタの 1 回の保存で複数の変更イベントが届くため、少し待ってから 1 回だけビルドする
 const DEBOUNCE_MS = 150;
@@ -54,14 +44,16 @@ const CONTENT_TYPES: Record<string, string> = {
  *
  * NOTE:
  *   - latexmk は .tex のディレクトリで実行するので、そこにある latexmkrc が使われる
- *   - PDF は .tex と同じディレクトリに <ジョブ名>.pdf として出力されるものとして扱う
+ *   - ビルドに成功したら、PDF だけを .tex と同じディレクトリに <ジョブ名>.pdf としてコピーする
  */
 export const llp = ({ texPath }: { texPath: string }): Plugin => {
   const dir = dirname(texPath);
   const texName = basename(texPath);
   const jobName = basename(texPath, extname(texPath));
+  const outDir = join(dir, OUT_DIR_NAME);
+  const builtPdfPath = join(outDir, `${jobName}.pdf`);
   const pdfPath = join(dir, `${jobName}.pdf`);
-  const logPath = join(dir, `${jobName}.log`);
+  const logPath = join(outDir, `${jobName}.log`);
 
   let status: BuildStatus = { state: 'building', version: 0 };
 
@@ -86,10 +78,15 @@ export const llp = ({ texPath }: { texPath: string }): Plugin => {
         building = true;
         setStatus({ ...status, state: 'building' });
         const started = Date.now();
-        const child = spawn('latexmk', ['-interaction=nonstopmode', '-halt-on-error', texName], {
-          cwd: dir,
-          stdio: ['ignore', 'pipe', 'pipe'],
-        });
+        prepareOutDir(outDir);
+        const args = [
+          '-interaction=nonstopmode',
+          '-halt-on-error',
+          `-auxdir=${OUT_DIR_NAME}`,
+          `-outdir=${OUT_DIR_NAME}`,
+          texName,
+        ];
+        const child = spawn('latexmk', args, { cwd: dir, stdio: ['ignore', 'pipe', 'pipe'] });
         let output = '';
         child.stdout.on('data', (chunk) => (output += String(chunk)));
         child.stderr.on('data', (chunk) => (output += String(chunk)));
@@ -99,6 +96,14 @@ export const llp = ({ texPath }: { texPath: string }): Plugin => {
           const seconds = ((Date.now() - started) / 1000).toFixed(1);
           if (code === 0) {
             logger.info(`✅ build succeeded in ${seconds}s`, { timestamp: true });
+            try {
+              copyFileSync(builtPdfPath, pdfPath);
+            } catch (err) {
+              // Windows では PDF ビューアが開いているファイルを上書きできないが、プレビューは続けられる
+              logger.warn(`⚠️ could not copy PDF to ${pdfPath}: ${(err as Error).message}`, {
+                timestamp: true,
+              });
+            }
             setStatus({ state: 'ok', version: status.version + 1 });
           } else {
             const error = extractError(logPath, output);
@@ -114,10 +119,7 @@ export const llp = ({ texPath }: { texPath: string }): Plugin => {
         });
       };
 
-      // 図として読み込む PDF の変更は拾いたいので、生成物は拡張子ではなくジョブ名で見分ける
-      const isGenerated = (file: string) =>
-        (file.startsWith(`${jobName}.`) && file !== texName) ||
-        INTERMEDIATE_EXTS.has(extname(file).toLowerCase());
+      const isGenerated = (file: string) => file.startsWith(`${jobName}.`) && file !== texName;
       const isHidden = (file: string) =>
         file.split(/[\\/]/).some((part) => part.startsWith('.') || part === 'node_modules');
       // 中のファイルを読んだだけでもディレクトリ自体のイベントが届くため、ディレクトリは無視する
@@ -137,14 +139,14 @@ export const llp = ({ texPath }: { texPath: string }): Plugin => {
         res.end(JSON.stringify(status));
       });
       server.middlewares.use(PDF_PATH, (_req, res) => {
-        if (!existsSync(pdfPath)) {
+        if (!existsSync(builtPdfPath)) {
           res.statusCode = 404;
           res.end();
           return;
         }
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Cache-Control', 'no-store');
-        createReadStream(pdfPath).pipe(res);
+        createReadStream(builtPdfPath).pipe(res);
       });
       server.middlewares.use(PDFJS_ASSETS_PATH, (req, res, next) => {
         const path = normalize(join(PDFJS_DIR, decodeURIComponent((req.url ?? '').split('?')[0])));
@@ -157,6 +159,20 @@ export const llp = ({ texPath }: { texPath: string }): Plugin => {
       build();
     },
   };
+};
+
+/**
+ * @function 生成物を置くディレクトリを用意する
+ *
+ * @param outDir 生成物を置くディレクトリのパス
+ *
+ * NOTE:
+ *   - 中には「*」だけの .gitignore を置き、Git の管理から外す
+ */
+const prepareOutDir = (outDir: string): void => {
+  mkdirSync(outDir, { recursive: true });
+  const gitignorePath = join(outDir, '.gitignore');
+  if (!existsSync(gitignorePath)) writeFileSync(gitignorePath, '*\n');
 };
 
 /**
