@@ -44,7 +44,7 @@ llp
 # 特定のディレクトリを監視対象とする
 llp path/to/directory
 
-#　特定の .tex ファイルを対象とする
+# 特定の .tex ファイルを対象とする
 llp path/to/specific.tex
 ```
 
