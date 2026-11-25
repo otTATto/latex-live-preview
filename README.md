@@ -27,7 +27,8 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
 
 [^npm]: 将来的には npm パッケージとして公開する予定なので、1 と 2 の手順はもっと簡単になります。
 
-#### 補足① 特定の tex ファイルを指定してプレビューしたい
+<details>
+<summary><strong>補足① 特定の tex ファイルを指定してプレビューしたい</strong></summary>
 
 `llp` コマンドは、何も指定しない場合、カレントディレクトリを監視対象とし、その中からビルドする `.tex` ファイルを探します。
 
@@ -48,13 +49,18 @@ llp path/to/directory
 llp path/to/specific.tex
 ```
 
-#### 補足② `llp` コマンドを削除したい
+</details>
+
+<details>
+<summary><strong>補足② `llp` コマンドを削除したい</strong></summary>
 
 端末の任意の場所で以下を実行します。
 
 ```sh
 npm rm -g @ottatto/llp
 ```
+
+</details>
 
 ## 🧩 仕組み
 
