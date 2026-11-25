@@ -22,6 +22,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@clack/prompts": "^1.9.0",
     "pdfjs-dist": "^6.5.438",
     "vite": "^8.3.8"
   },

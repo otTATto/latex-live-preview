@@ -18,6 +18,7 @@ import {
   STATUS_EVENT,
   STATUS_PATH,
 } from './protocol.ts';
+import { isIgnoredName } from './root.ts';
 import type { Plugin } from 'vite';
 
 // latexmk の生成物が入るディレクトリ
@@ -120,8 +121,7 @@ export const llp = ({ texPath }: { texPath: string }): Plugin => {
       };
 
       const isGenerated = (file: string) => file.startsWith(`${jobName}.`) && file !== texName;
-      const isHidden = (file: string) =>
-        file.split(/[\\/]/).some((part) => part.startsWith('.') || part === 'node_modules');
+      const isHidden = (file: string) => file.split(/[\\/]/).some(isIgnoredName);
       // 中のファイルを読んだだけでもディレクトリ自体のイベントが届くため、ディレクトリは無視する
       const isDirectory = (file: string) =>
         statSync(join(dir, file), { throwIfNoEntry: false })?.isDirectory() ?? false;
