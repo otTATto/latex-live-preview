@@ -5,25 +5,26 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
 ## 🚀 使い方
 
 > [!IMPORTANT]
-> あらかじめ TeX Live（ref: [otTATto/tex-setup](https://github.com/otTATto/tex-setup)）と Node.js（22.18 以降）が必要になります。
+> あらかじめ [TeX Live のセットアップ](https://github.com/otTATto/tex-setup) と Node.js（22.13 以降）が必要になります。
 
-1. このリポジトリを Clone する
-2. 以下を実行して、端末の任意の場所から `llp` コマンドを使えるようにする [^npm]
+1. このリポジトリを Clone します
+2. 以下を実行して、端末の任意の場所から `llp` コマンドを使えるようにします [^npm]
 
    ```sh
    npm install
+   npm run build
    npm link
    ```
 
-3. プレビューしたい `.tex` ファイルが置かれている場所で、以下を実行する
+3. プレビューしたい `.tex` ファイルが置かれている場所で、以下を実行します
 
    ```sh
    cd path/to/directory
    llp
    ```
 
-4. ブラウザが開いて PDF [^output] が表示される
-5. 以降は `.tex` を保存するたびに表示が更新される
+4. ブラウザが開いて PDF が表示されます
+5. 以降は `.tex` を保存するたびに表示が更新されます
 
 [^npm]: 将来的には npm パッケージとして公開する予定なので、1 と 2 の手順はもっと簡単になります。
 
@@ -79,10 +80,8 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
   | `-h`, `--help`          | 使い方を表示する                                           |        |
   | `-v`, `--version`       | バージョンを表示する                                       |        |
 
-- ところで、既定のポート番号 `1984` は、$\LaTeX$ が最初に公開された 1984 年 [^tex-history] にちなんでいます
+- ところで、既定のポート番号 `1984` は、[$\LaTeX$ が最初に公開された 1984 年](https://texwiki.texjp.org/?TeX%E3%81%AE%E6%AD%B4%E5%8F%B2) にちなんでいます
 - 指定したポートがすでに使われていた場合、`--strict-port` を指定しない限り、空いている次の番号を使います
-
-[^tex-history]: [**TeXの歴史** - TeX Wiki](https://texwiki.texjp.org/?TeX%E3%81%AE%E6%AD%B4%E5%8F%B2)
 
 </details>
 
@@ -108,7 +107,7 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
 <details>
 <summary><strong>補足⑤ llp コマンドを削除したい</strong></summary>
 
-1. 端末の任意の場所で以下を実行する
+1. 端末の任意の場所で以下を実行します
 
    ```sh
    npm rm -g @ottatto/llp
@@ -120,12 +119,18 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
 
 `llp` は、以下の流れで PDF を更新します。
 
-1. `.tex` のあるディレクトリ以下を監視し、ファイルの変更を検知する
-2. `.tex` のあるディレクトリで [Latexmk](https://texwiki.texjp.org/?Latexmk) を実行する
-3. コンパイルの結果を、[Vite](https://ja.vite.dev/) の WebSocket でブラウザに通知する
-4. ブラウザは [PDF.js](https://mozilla.github.io/pdf.js/) で PDF [^output] を読み込み直し、見えているページから描画する
+1. `.tex` のあるディレクトリ以下を監視し、ファイルの変更を検知します
+2. `.tex` のあるディレクトリで [Latexmk](https://texwiki.texjp.org/?Latexmk) を実行します
+3. コンパイルの結果を、[Vite](https://ja.vite.dev/) の WebSocket でブラウザに通知します
+4. ブラウザは [PDF.js](https://mozilla.github.io/pdf.js/) で PDF を読み込み直し、見えているページから描画します
 
-[^output]: PDF は `.tex` と同じ場所に生成され、中間ファイルは `.llp/` 内に生成されます。したがって、`latexmkrc` に書いた `$out_dir` や `$aux_dir` は**無視されます**。
+<details>
+<summary><strong>［補足］ファイルの生成場所について</strong></summary>
+
+- PDF ファイルは `.tex` と同じ場所に生成され、中間ファイルは `.llp/` 内に生成されます
+- したがって、`latexmkrc` に書いた `$out_dir` や `$aux_dir` は**無視されます**
+
+</details>
 
 ## 🗂️ リポジトリの構造
 
@@ -133,13 +138,84 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
 
 ```
 .
-├── bin/llp.js    # llp コマンドの入口
-├── client/       # ブラウザ側（PDF ビューワ）
-├── server/       # サーバー側
-├── shared/       # サーバー側とブラウザ側で共通
+├── bin/llp.js            # llp コマンドの入口
+├── client/               # ブラウザ側（PDF ビューワ）
+├── server/               # サーバー側
+├── shared/               # サーバー側とブラウザ側で共通
+├── dev/                  # 開発用の llp-dev コマンド
+├── dist/                 # npm で配る JS（npm run build で生成）
+├── tsconfig.build.json   # dist/ を出力するための設定
 └── README.md
 ```
 
+## 🤝 貢献
+
+<p align="center">
+  <em>LaTeX Live Preview への貢献に興味を持ってくださり、ありがとうございます！💛</em>
+</p>
+
+1. まずは issue を起票して、方針を [otTATto](https://github.com/otTATto) と相談しましょう
+2. 仕様が固まったら、次章の手順に沿って環境を構築しましょう
+3. 最新の `main` から `feature/*` または `fix/*` ブランチを作り、実装を進めます
+4. コミットメッセージは [Conventional Commits](https://www.conventionalcommits.org/ja/v1.0.0/) に従ってください
+5. Pull Request を出します
+6. CI が通り、[otTATto](https://github.com/otTATto) の承認ののちに `main` に Merge します
+7. 程よいタイミングで [otTATto](https://github.com/otTATto) が新しいバージョンを npm に公開します💪
+
+## 🛠️ 開発
+
+> [!NOTE]
+> 開発には Node.js（22.18 以降）が必要になります。
+
+1. このリポジトリを Clone して、依存パッケージを入れ、ビルドします
+
+   ```sh
+   gh repo clone otTATto/latex-live-preview && cd latex-live-preview
+   npm install && npm run build
+   ```
+
+2. dev ディレクトリに移動し、開発用の llp コマンド `llp-dev` をグローバルにリンクします
+
+   ```sh
+   cd dev && npm link
+   ```
+
+3. リポジトリのルートで以下を実行しておけば、ソースの変更を検知して `dist/` が自動でビルドし直されます
+
+   ```sh
+   cd ../ && npm run dev
+   ```
+
+4. 端末の任意の場所で、開発用の llp コマンド `llp-dev` を使用できます
+
+   ```sh
+   llp-dev
+   ```
+
+<details>
+<summary><strong>補足① 手元でテストを回したい</strong></summary>
+
+- PR を出せば CI で検証されますが、その前に手元の環境での検証も勿論できます
+- 具体的には、次のようなテストが用意されています
+
+  | コマンド             | 内容                                         | 備考                                                                       |
+  | :------------------- | :------------------------------------------- | :------------------------------------------------------------------------- |
+  | `npm test`           | 単体テストを実行します                       |                                                                            |
+  | `npm run test:build` | PDF をコンパイルするビルドテストを実行します | [TeX Live のセットアップ](https://github.com/otTATto/tex-setup) が必要です |
+
+</details>
+
+<details>
+<summary><strong>補足② 開発用の llp-dev コマンドを削除したい</strong></summary>
+
+1. 端末の任意の場所で以下を実行します
+
+   ```sh
+   npm rm -g llp-dev
+   ```
+
+</details>
+
 ## 📖 ライセンス
 
-MIT（ref: [LICENSE](LICENSE)）
+[MIT](LICENSE)
