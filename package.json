@@ -12,12 +12,14 @@
     "server",
     "shared",
     "client",
-    "!**/*.test.ts"
+    "!**/*.test.ts",
+    "!**/fixtures/**"
   ],
   "license": "MIT",
   "scripts": {
     "typecheck": "tsc",
-    "test": "node --test \"server/**/*.test.ts\"",
+    "test": "node --test \"server/**/!(*.build).test.ts\"",
+    "test:build": "node --test \"server/**/*.build.test.ts\"",
     "lint": "oxlint .",
     "lint:fix": "oxlint --fix .",
     "format": "oxfmt --write .",
