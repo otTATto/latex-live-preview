@@ -5,21 +5,20 @@
   "description": "LaTeX の PDF をブラウザで（ほぼほぼ）リアルタイムにプレビューする",
   "type": "module",
   "bin": {
-    "llp": "bin/llp.js"
+    "llp": "dist/bin/llp.js"
   },
   "files": [
-    "bin",
-    "server",
-    "shared",
+    "dist",
     "client",
-    "!**/*.test.ts",
-    "!**/fixtures/**"
+    "shared"
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=22.18.0"
+    "node": ">=22.13.0"
   },
   "scripts": {
+    "dev": "tsc -p tsconfig.build.json --watch",
+    "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc",
     "test": "node --test \"server/**/!(*.build).test.ts\"",
     "test:build": "node --test \"bin/**/*.build.test.ts\" \"server/**/*.build.test.ts\"",
@@ -27,6 +26,8 @@
     "lint:fix": "oxlint --fix .",
     "format": "oxfmt --write .",
     "format:check": "oxfmt --check .",
+    "prepack": "npm run build && npm pkg delete scripts.prepare",
+    "postpack": "npm pkg set scripts.prepare=husky",
     "prepare": "husky"
   },
   "dependencies": {

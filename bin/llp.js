@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-import { readFileSync } from 'node:fs';
-import { relative, resolve } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
+import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createLogger, createServer } from 'vite';
 import { waitForReconnect } from '../server/browser.ts';
-import { copyPdf, runLatexmk } from '../server/latexmk.ts';
+import { copyPdf, outputPaths, runLatexmk } from '../server/latexmk.ts';
 import { DEFAULT_OPTIONS, loadConfig, parseCliArgs, USAGE } from '../server/options.ts';
 import { llp } from '../server/plugin.ts';
 import { resolveTexPath } from '../server/root.ts';
@@ -23,7 +23,10 @@ try {
   process.exit(2);
 }
 
-const pkgRoot = fileURLToPath(new URL('..', import.meta.url));
+// このファイルは、開発時のソースでは bin/、npm で配るときは dist/bin/ にあり、深さが変わるので、
+// package.json が見つかるまで親へさかのぼってパッケージのルートを求める
+let pkgRoot = dirname(fileURLToPath(import.meta.url));
+while (!existsSync(join(pkgRoot, 'package.json'))) pkgRoot = dirname(pkgRoot);
 
 if (cli.help) {
   process.stdout.write(`${USAGE}\n`);
@@ -83,7 +86,8 @@ const server = await createServer({
   configFile: false,
   customLogger: logger,
   root: resolve(pkgRoot, 'client'),
-  cacheDir: resolve(pkgRoot, 'node_modules/.vite'),
+  // グローバルに入れたパッケージの中は書き込めないことがあるので、.tex の横の .llp/ に置く
+  cacheDir: join(outputPaths(texPath).outDir, 'vite'),
   // pdf.js は ESM のまま配信する (事前バンドルすると Worker の扱いが壊れやすいため)
   optimizeDeps: { exclude: ['pdfjs-dist'] },
   server: {

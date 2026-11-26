@@ -1,0 +1,15 @@
+{
+  // npm で配る JS を dist/ に出力するための設定
+  // client/ は実行時に Vite が変換して配信するので、ここではコンパイルしない
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "dist",
+    "rootDir": ".",
+    // import の .ts を .js に書き換える
+    "rewriteRelativeImportExtensions": true,
+    "types": ["node"]
+  },
+  "include": ["bin", "server", "shared"],
+  "exclude": ["**/*.test.ts", "**/fixtures/**"]
+}

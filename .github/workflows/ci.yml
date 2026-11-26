@@ -89,3 +89,68 @@ jobs:
 
       - name: Build Test
         run: npm run test:build
+
+  package-test:
+    name: Package Test (${{ matrix.os }})
+    # npm で配るパッケージを実際に入れて、llp コマンドとして動くかを確かめる
+    # TeX Live は Linux でしか入れられないので、ビルドまで確かめるのは Linux だけにする
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+
+      - if: runner.os == 'Linux'
+        uses: otTATto/tex-setup@v1
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci
+        env:
+          HUSKY: 0
+
+      - name: Pack
+        run: npm pack --pack-destination "$RUNNER_TEMP"
+
+      - name: Check Package
+        run: |
+          # パッケージを作った後も、手元の package.json は元に戻っている
+          git diff --exit-code package.json
+          # 利用者の環境で husky を動かさないよう、配るパッケージには prepare を入れない
+          # Windows の tar は D:\... を別のホストと解釈するので、相対パスで渡す
+          if (cd "$RUNNER_TEMP" && tar -xOzf ottatto-llp-*.tgz package/package.json) | grep '"prepare"'; then
+            echo "::error::prepare script must not be published"
+            exit 1
+          fi
+
+      # 利用者が使う環境に近づけるため、サポートする最も古い Node で動かす
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22.13.0
+
+      - name: Install Package
+        run: npm install -g "$RUNNER_TEMP"/ottatto-llp-*.tgz
+
+      - name: Run llp
+        run: |
+          llp --version
+          llp --help
+
+      - name: Build with llp
+        if: runner.os == 'Linux'
+        run: |
+          mkdir "$RUNNER_TEMP/doc"
+          cp server/fixtures/latexmkrc server/fixtures/sample.tex "$RUNNER_TEMP/doc/"
+          cd "$RUNNER_TEMP/doc"
+          llp build
+          test -f sample.pdf
