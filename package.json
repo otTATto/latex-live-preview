@@ -1,8 +1,27 @@
 {
   "name": "@ottatto/llp",
-  "version": "0.0.0",
-  "private": true,
-  "description": "LaTeX の PDF をブラウザで（ほぼほぼ）リアルタイムにプレビューする",
+  "version": "0.1.0",
+  "description": "A CLI tool that previews LaTeX PDFs in the browser.",
+  "keywords": [
+    "latex",
+    "latexmk",
+    "pdf",
+    "preview",
+    "live-preview",
+    "cli",
+    "vite",
+    "pdfjs"
+  ],
+  "homepage": "https://github.com/otTATto/latex-live-preview#readme",
+  "bugs": {
+    "url": "https://github.com/otTATto/latex-live-preview/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/otTATto/latex-live-preview.git"
+  },
+  "license": "MIT",
+  "author": "otTATto",
   "type": "module",
   "bin": {
     "llp": "dist/bin/llp.js"
@@ -12,9 +31,11 @@
     "client",
     "shared"
   ],
-  "license": "MIT",
   "engines": {
     "node": ">=22.13.0"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "dev": "tsc -p tsconfig.build.json --watch",

@@ -1,0 +1,58 @@
+name: Release
+
+# v0.1.1 のようなタグを push すると、npm に公開する
+# npm のトークンは使わず、Trusted Publishing (GitHub Actions の OIDC) で認証する
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  # Trusted Publishing と provenance に必要
+  id-token: write
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          registry-url: https://registry.npmjs.org
+          # 公開するパッケージは、キャッシュを使わずに作る
+          package-manager-cache: false
+
+      - name: Check Version
+        id: version
+        run: |
+          # タグと package.json の version が食い違ったまま公開しないようにする
+          version="$(node -p "require('./package.json').version")"
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match package.json version $version"
+            exit 1
+          fi
+          # 手で公開済みの版 (初回の 0.1.0 など) のタグなら、公開は飛ばす
+          # npm view がその版を表示できたら、公開済みとみなす
+          if [ -n "$(npm view "@ottatto/llp@$version" version 2>/dev/null)" ]; then
+            echo "::notice::@ottatto/llp@$version is already published"
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install Dependencies
+        if: steps.version.outputs.published != 'true'
+        run: npm ci
+        env:
+          HUSKY: 0
+
+      - name: Test
+        if: steps.version.outputs.published != 'true'
+        run: npm test
+
+      # prepack でビルドし、provenance は Trusted Publishing で自動で付く
+      - name: Publish
+        if: steps.version.outputs.published != 'true'
+        run: npm publish
