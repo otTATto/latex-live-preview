@@ -7,30 +7,39 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
 > [!IMPORTANT]
 > あらかじめ [TeX Live のセットアップ](https://github.com/otTATto/tex-setup) と Node.js（22.13 以降）が必要になります。
 
-1. このリポジトリを Clone します
-2. 以下を実行して、端末の任意の場所から `llp` コマンドを使えるようにします [^npm]
+1. 以下を実行して、端末の任意の場所から `llp` コマンドを使えるようにします
 
    ```sh
-   npm install
-   npm run build
-   npm link
+   npm install -g @ottatto/llp
    ```
 
-3. プレビューしたい `.tex` ファイルが置かれている場所で、以下を実行します
+2. プレビューしたい `.tex` ファイルが置かれている場所で、以下のように `llp` コマンドを実行します
 
    ```sh
    cd path/to/directory
    llp
    ```
 
-4. ブラウザが開いて PDF が表示されます
-5. 以降は `.tex` を保存するたびに表示が更新されます
+3. ブラウザが開いて PDF が表示されます
+4. 以降は `.tex` を保存するたびに表示が更新されます
 
-[^npm]: 将来的には npm パッケージとして公開する予定なので、1 と 2 の手順はもっと簡単になります。
+<details>
+<summary><strong>補足① インストールせずに試してみたい</strong></summary>
+
+- 以下のように `npx` を使えば、インストールせずに `llp` コマンドを試せます
+
+  ```sh
+  cd path/to/directory
+  npx @ottatto/llp
+  ```
+
+- ただし、以降の説明における `llp` を `npx @ottatto/llp` に読み替えれて実行する必要があります
+
+</details>
 
 <details>
 
-<summary><strong>補足① 特定の tex ファイルを指定してプレビューしたい</strong></summary>
+<summary><strong>補足② 特定の tex ファイルを指定してプレビューしたい</strong></summary>
 
 - `llp` コマンドは、何も指定しない場合、カレントディレクトリを監視対象とし、その中からビルドする `.tex` ファイルを探します
 
@@ -54,7 +63,7 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
 </details>
 
 <details>
-<summary><strong>補足② プレビューせずに一度だけビルドしたい</strong></summary>
+<summary><strong>補足③ プレビューせずに一度だけビルドしたい</strong></summary>
 
 - `llp build` を実行すると、プレビュー用のサーバーを立てずに一度だけビルドし、`.tex` と同じ場所に PDF を出力します
 
@@ -68,7 +77,7 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
 </details>
 
 <details>
-<summary><strong>補足③ llp コマンドで使用可能なオプションを確認したい</strong></summary>
+<summary><strong>補足④ llp コマンドで使用可能なオプションを確認したい</strong></summary>
 
 - `llp` コマンドには、以下のオプションが用意されています
 
@@ -86,7 +95,7 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
 </details>
 
 <details>
-<summary><strong>補足④ llp コマンドの設定ファイルを書きたい</strong></summary>
+<summary><strong>補足⑤ llp コマンドの設定ファイルを書きたい</strong></summary>
 
 - 毎回指定するようなオプションは、設定ファイル `llp.toml` に書いておくことで、手間を減らすことができます
 
@@ -105,7 +114,7 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
 </details>
 
 <details>
-<summary><strong>補足⑤ llp コマンドを削除したい</strong></summary>
+<summary><strong>補足⑥ llp コマンドを削除したい</strong></summary>
 
 1. 端末の任意の場所で以下を実行します
 
