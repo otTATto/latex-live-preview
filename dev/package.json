@@ -1,0 +1,9 @@
+{
+  "name": "llp-dev",
+  "private": true,
+  "description": "開発中の llp を、製品版の llp と混ざらないよう llp-dev という名前で使うためのパッケージ",
+  "type": "module",
+  "bin": {
+    "llp-dev": "llp-dev.js"
+  }
+}
