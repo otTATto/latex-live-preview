@@ -136,7 +136,7 @@ jobs:
       # 利用者が使う環境に近づけるため、サポートする最も古い Node で動かす
       - uses: actions/setup-node@v7
         with:
-          node-version: 22.13.0
+          node-version: 26.13.1
 
       - name: Install Package
         run: npm install -g "$RUNNER_TEMP"/ottatto-llp-*.tgz
