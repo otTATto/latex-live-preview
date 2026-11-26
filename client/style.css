@@ -1,6 +1,8 @@
 :root {
   color-scheme: light;
+  --duration: 200ms;
   --bg: #f5f5f5;
+  --bg-on-danger: #f4ecec;
   --page-bg: #fff;
   --page-gap: 16px;
   --badge-bg: rgb(255 255 255 / 20%);
@@ -16,6 +18,12 @@ body {
   background: var(--bg);
   font-family: system-ui, sans-serif;
   font-size: 13px;
+  transition: background-color var(--duration);
+}
+
+/* エラーのときは全体の背景も赤みを帯びさせる */
+body[data-state='error'] {
+  background: var(--bg-on-danger);
 }
 
 #pages {
@@ -42,7 +50,6 @@ body {
  * - 幅は内容に合わせて変わる（auto のままでは transition しないので、main.ts が幅を測って動かす）
  */
 #badge {
-  --duration: 200ms;
   position: fixed;
   top: 12px;
   right: 12px;
