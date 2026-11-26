@@ -16,6 +16,12 @@
       "description": "サポート対象の Node 22 でも動くことを型で確かめたい",
       "matchPackageNames": ["@types/node"],
       "allowedVersions": "<23"
+    },
+    {
+      "description": "CI ではサポートする最も古い Node.js を確かめたいので、更新しない",
+      "matchManagers": ["github-actions"],
+      "matchDepNames": ["node"],
+      "enabled": false
     }
   ]
 }
