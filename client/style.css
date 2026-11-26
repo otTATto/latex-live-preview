@@ -1,14 +1,13 @@
 :root {
-  color-scheme: dark;
+  color-scheme: light;
   --bg: #f5f5f5;
-  --bg-on-danger: #f4ecec;
   --page-bg: #fff;
   --page-gap: 16px;
-  --badge-bg: #fff;
+  --badge-bg: rgb(255 255 255 / 20%);
   --badge-fg: #515151;
-  --danger: #ed6363;
+  --danger: rgb(225 70 70 / 80%);
   --on-danger: #fff;
-  --panel-bg: #856a6a;
+  --panel-bg: rgb(145 100 100 / 80%);
   --panel-fg: #e6e6e6;
 }
 
@@ -55,6 +54,7 @@ body {
   border: 0;
   border-radius: 999px;
   background: var(--badge-bg);
+  backdrop-filter: blur(8px);
   color: var(--badge-fg);
   box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
   font: inherit;
@@ -136,6 +136,7 @@ body[data-state='ok'] #badge {
   border: 0;
   border-radius: 8px;
   background: var(--panel-bg);
+  backdrop-filter: blur(8px);
   color: var(--panel-fg);
   box-shadow: 0 4px 16px rgb(70 50 50 / 50%);
   /* 日本語環境の monospace (MS ゴシックなど) は \ を ¥ で描くため、欧文の等幅フォントを先に並べる */
