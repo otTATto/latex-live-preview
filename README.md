@@ -53,7 +53,7 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
 </details>
 
 <details>
-<summary><strong>補足② `llp` コマンドを削除したい</strong></summary>
+<summary><strong>補足② llp コマンドを削除したい</strong></summary>
 
 1. 端末の任意の場所で以下を実行する
 
@@ -74,7 +74,7 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
 
 [^output]: PDF は `.tex` と同じ場所に生成され、中間ファイルは `.llp/` 内に生成されます。したがって、`latexmkrc` に書いた `'$out_dir` や `$aux_dir` は**無視されます**。
 
-## 📦 リポジトリの構造
+## 🗂️ リポジトリの構造
 
 大まかには、以下のような構造になっています。
 
