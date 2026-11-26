@@ -8,6 +8,7 @@ import { loadConfig, parseCliArgs } from './options.ts';
 describe('parseCliArgs', () => {
   it('何も指定しなければ、設定は空で target もない', () => {
     assert.deepEqual(parseCliArgs([]), {
+      command: 'preview',
       target: undefined,
       options: {},
       help: false,
@@ -17,11 +18,32 @@ describe('parseCliArgs', () => {
 
   it('パスとオプションを読む', () => {
     assert.deepEqual(parseCliArgs(['thesis', '-p', '3000', '--strict-port', '--no-open']), {
+      command: 'preview',
       target: 'thesis',
       options: { port: 3000, strictPort: true, open: false },
       help: false,
       version: false,
     });
+  });
+
+  it('最初の引数が build なら、1 回だけビルドするコマンドとして読む', () => {
+    assert.deepEqual(parseCliArgs(['build']), {
+      command: 'build',
+      target: undefined,
+      options: {},
+      help: false,
+      version: false,
+    });
+    assert.equal(parseCliArgs(['build', 'thesis/main.tex']).target, 'thesis/main.tex');
+  });
+
+  it('build という名前のディレクトリは、./build などと書けばプレビューの対象として読む', () => {
+    for (const target of ['./build', 'build/', '.\\build']) {
+      const cli = parseCliArgs([target]);
+      assert.equal(cli.command, 'preview', target);
+      assert.equal(cli.target, target, target);
+    }
+    assert.equal(parseCliArgs(['build', 'build']).target, 'build');
   });
 
   it('--port=N の形も読める', () => {
@@ -39,6 +61,7 @@ describe('parseCliArgs', () => {
 
   it('パスが 2 つ以上あればエラーにする', () => {
     assert.throws(() => parseCliArgs(['a.tex', 'b.tex']), /too many paths/);
+    assert.throws(() => parseCliArgs(['build', 'a.tex', 'b.tex']), /too many paths/);
   });
 });
 

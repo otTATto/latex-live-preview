@@ -19,7 +19,7 @@
   "scripts": {
     "typecheck": "tsc",
     "test": "node --test \"server/**/!(*.build).test.ts\"",
-    "test:build": "node --test \"server/**/*.build.test.ts\"",
+    "test:build": "node --test \"bin/**/*.build.test.ts\" \"server/**/*.build.test.ts\"",
     "lint": "oxlint .",
     "lint:fix": "oxlint --fix .",
     "format": "oxfmt --write .",

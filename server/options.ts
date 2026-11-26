@@ -25,10 +25,12 @@ export type Options = {
 
 export const DEFAULT_OPTIONS: Options = { port: 1984, strictPort: false, open: true };
 
-export const USAGE = `usage: llp [path] [options]
+export const USAGE = `usage:
+  llp [path] [options]  start the preview server
+  llp build [path]      build once and exit
 
 options:
-  -p, --port <number>  port to listen on (default: ${DEFAULT_OPTIONS.port})
+  -p, --port <number>  port of the preview server (default: ${DEFAULT_OPTIONS.port})
       --strict-port    exit if the port is in use instead of trying the next one
       --no-open        do not open the browser
   -h, --help           show this help
@@ -37,10 +39,14 @@ options:
 /**
  * コマンドライン引数を読んだ結果
  *
+ * - command:
+ *   - preview: プレビュー用のサーバーを立てる
+ *   - build  : 1 回だけビルドして終了する
  * - target : ビルドする .tex ファイルか、それを探すディレクトリ
  * - options: 引数で指定された設定だけを持つ
  */
 export type CliArgs = {
+  command: 'preview' | 'build';
   target?: string;
   options: Partial<Options>;
   help: boolean;
@@ -66,7 +72,10 @@ export const parseCliArgs = (args: string[]): CliArgs => {
     allowPositionals: true,
     allowNegative: true,
   });
-  if (positionals.length > 1) throw new Error(`too many paths: ${positionals.join(' ')}`);
+  // build という名前のディレクトリを渡したいときは ./build などと書けばよい
+  const command = positionals[0] === 'build' ? 'build' : 'preview';
+  const paths = command === 'build' ? positionals.slice(1) : positionals;
+  if (paths.length > 1) throw new Error(`too many paths: ${paths.join(' ')}`);
 
   const options: Partial<Options> = {};
   if (values.port !== undefined) {
@@ -78,7 +87,8 @@ export const parseCliArgs = (args: string[]): CliArgs => {
   if (values.open !== undefined) options.open = values.open;
 
   return {
-    target: positionals[0],
+    command,
+    target: paths[0],
     options,
     help: values.help ?? false,
     version: values.version ?? false,

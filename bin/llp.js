@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createLogger, createServer } from 'vite';
+import { copyPdf, runLatexmk } from '../server/latexmk.ts';
 import { DEFAULT_OPTIONS, loadConfig, parseCliArgs, USAGE } from '../server/options.ts';
 import { llp } from '../server/plugin.ts';
 import { resolveTexPath } from '../server/root.ts';
@@ -37,12 +38,39 @@ let texPath;
 let config;
 try {
   texPath = await resolveTexPath(cli.target);
-  if (texPath) config = loadConfig(texPath);
+  // llp.toml にはまだプレビュー用の設定しかないので、build では読まない
+  if (texPath && cli.command === 'preview') config = loadConfig(texPath);
 } catch (err) {
   logger.error(messageOf(err), { timestamp: true });
   process.exit(2);
 }
 if (!texPath) process.exit(130);
+
+if (cli.command === 'build') {
+  logger.info(`📄 target: ${relative(process.cwd(), texPath)}`, { timestamp: true });
+  const result = await runLatexmk(texPath);
+  const seconds = result.seconds.toFixed(1);
+  if (!result.ok) {
+    // CI などで原因を追えるよう、要約ではなくエラーの全文を出す
+    logger.error(
+      `❌ build failed in ${seconds}s
+${result.error}`,
+      { timestamp: true },
+    );
+    process.exit(1);
+  }
+  try {
+    const pdf = copyPdf(texPath);
+    logger.info(`✅ build succeeded in ${seconds}s: ${relative(process.cwd(), pdf)}`, {
+      timestamp: true,
+    });
+  } catch (err) {
+    // build の目的は PDF を作ることなので、プレビューと違って失敗として扱う
+    logger.error(`❌ could not copy PDF: ${messageOf(err)}`, { timestamp: true });
+    process.exit(1);
+  }
+  process.exit(0);
+}
 
 if (config) {
   logger.info(`⚙️ config: ${config.path}`, { timestamp: true });
