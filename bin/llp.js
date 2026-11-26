@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createLogger, createServer } from 'vite';
+import { waitForReconnect } from '../server/browser.ts';
 import { copyPdf, runLatexmk } from '../server/latexmk.ts';
 import { DEFAULT_OPTIONS, loadConfig, parseCliArgs, USAGE } from '../server/options.ts';
 import { llp } from '../server/plugin.ts';
@@ -88,11 +89,14 @@ const server = await createServer({
   server: {
     port: options.port,
     strictPort: options.strictPort,
-    open: options.open,
+    // 前回の llp で開いたタブが残っていないと分かってからブラウザを開くようにする
+    open: false,
     fs: { allow: [pkgRoot] },
   },
   plugins: [llp({ texPath })],
 });
+const reconnected =
+  options.open && server.httpServer ? waitForReconnect(server.httpServer) : Promise.resolve(false);
 try {
   await server.listen();
 } catch (err) {
@@ -102,3 +106,8 @@ try {
   process.exit(1);
 }
 server.printUrls();
+
+if (options.open) {
+  if (await reconnected) logger.info('🔁 reusing the browser tab left open', { timestamp: true });
+  else server.openBrowser();
+}
