@@ -53,7 +53,21 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
 </details>
 
 <details>
-<summary><strong>補足② llp コマンドで使用可能なオプションを確認したい</strong></summary>
+<summary><strong>補足② プレビューせずに一度だけビルドしたい</strong></summary>
+
+- `llp build` を実行すると、プレビュー用のサーバーを立てずに一度だけビルドし、`.tex` と同じ場所に PDF を出力します
+
+  ```sh
+  # プレビュー用のサーバーを立てずに一度だけビルドする
+  llp build
+  ```
+
+- ちなみに、`build` という名前のディレクトリをプレビューしたい場合は、`llp ./build` のように書いてください
+
+</details>
+
+<details>
+<summary><strong>補足③ llp コマンドで使用可能なオプションを確認したい</strong></summary>
 
 - `llp` コマンドには、以下のオプションが用意されています
 
@@ -73,7 +87,7 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
 </details>
 
 <details>
-<summary><strong>補足③ llp コマンドの設定ファイルを書きたい</strong></summary>
+<summary><strong>補足④ llp コマンドの設定ファイルを書きたい</strong></summary>
 
 - 毎回指定するようなオプションは、設定ファイル `llp.toml` に書いておくことで、手間を減らすことができます
 
@@ -92,7 +106,7 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
 </details>
 
 <details>
-<summary><strong>補足④ llp コマンドを削除したい</strong></summary>
+<summary><strong>補足⑤ llp コマンドを削除したい</strong></summary>
 
 1. 端末の任意の場所で以下を実行する
 
