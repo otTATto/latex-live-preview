@@ -8,8 +8,23 @@
   </head>
   <!-- data-state はビルドの状態 (building | ok | error)。各要素の表示・非表示は style.css が決める -->
   <body data-state="building">
-    <p id="building" role="status">Building…</p>
-    <pre id="build-error" role="alert"></pre>
+    <button
+      id="badge"
+      type="button"
+      data-state="building"
+      popovertarget="error-panel"
+      aria-live="polite"
+    >
+      <span class="content building">
+        <span class="icon spinner" aria-hidden="true"></span>
+        <span class="label">Building</span>
+      </span>
+      <span class="content error">
+        <span class="icon exclamation" aria-hidden="true"></span>
+        <span class="label">Error</span>
+      </span>
+    </button>
+    <pre id="error-panel" popover></pre>
     <main id="pages"></main>
     <script type="module" src="./main.ts"></script>
   </body>

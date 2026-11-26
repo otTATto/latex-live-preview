@@ -17,7 +17,9 @@ const requireElement = (id: string): HTMLElement => {
 };
 
 const pagesEl = requireElement('pages');
-const buildErrorEl = requireElement('build-error');
+const buildErrorEl = requireElement('error-panel');
+const badgeEl = requireElement('badge');
+if (!(badgeEl instanceof HTMLButtonElement)) throw new Error('#badge must be a button');
 
 /**
  * 表示中の PDF
@@ -135,9 +137,37 @@ const observer = new IntersectionObserver(
   { rootMargin: '100% 0px' },
 );
 
+/**
+ * @function バッジの中身を building / error に切り替え、幅をなめらかに変える
+ *
+ * NOTE:
+ *   - 幅は auto のままでは transition しないので、切り替え前後の幅を測って px で動かす
+ *   - ok のときは CSS でフェードアウトさせるだけで、中身は直前の状態のまま残す
+ */
+const switchBadge = (state: 'building' | 'error'): void => {
+  if (badgeEl.dataset.state === state) return;
+  const from = badgeEl.getBoundingClientRect().width;
+  badgeEl.dataset.state = state;
+  badgeEl.style.width = '';
+  const to = badgeEl.getBoundingClientRect().width;
+  badgeEl.style.width = `${from}px`;
+  // 一度レイアウトさせてから幅を変えないと、transition が始まらない
+  badgeEl.getBoundingClientRect();
+  badgeEl.style.width = `${to}px`;
+};
+
+// 幅のアニメーションが終わったら auto に戻し、以降も内容に合わせて決まるようにする
+badgeEl.addEventListener('transitionend', (event) => {
+  if (event.target === badgeEl && event.propertyName === 'width') badgeEl.style.width = '';
+});
+
 const applyStatus = (status: BuildStatus): void => {
   document.body.dataset.state = status.state;
+  if (status.state !== 'ok') switchBadge(status.state);
   buildErrorEl.textContent = status.error ?? '';
+  // エラーのときだけ詳細を開けるようにし、エラーが解消したら開いていたパネルも閉じる
+  badgeEl.disabled = status.state !== 'error';
+  if (status.state !== 'error' && buildErrorEl.matches(':popover-open')) buildErrorEl.hidePopover();
   if (status.version !== loadedVersion) {
     loadedVersion = status.version;
     void load();

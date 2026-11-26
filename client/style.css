@@ -1,10 +1,15 @@
 :root {
   color-scheme: dark;
-  --bg: #3a3d41;
+  --bg: #f5f5f5;
+  --bg-on-danger: #f4ecec;
+  --page-bg: #fff;
   --page-gap: 16px;
-  --accent: #1f6feb;
-  --danger: #8b1a1a;
-  --on-color: #fff;
+  --badge-bg: #fff;
+  --badge-fg: #515151;
+  --danger: #ed6363;
+  --on-danger: #fff;
+  --panel-bg: #856a6a;
+  --panel-fg: #e6e6e6;
 }
 
 body {
@@ -21,8 +26,8 @@ body {
 
 #pages .page {
   margin-bottom: var(--page-gap);
-  background: #fff;
-  box-shadow: 0 2px 8px rgb(0 0 0 / 40%);
+  background: var(--page-bg);
+  box-shadow: 0 12px 24px rgb(0 0 0 / 15%);
 }
 
 #pages canvas {
@@ -31,39 +36,114 @@ body {
   height: 100%;
 }
 
-/* ビルドの状態ごとの表示 */
-
-#building,
-#build-error {
-  display: none;
-}
-
-body[data-state='building'] #building,
-body[data-state='error'] #build-error {
-  display: block;
-}
-
-#building {
+/*
+ * ビルドの状態を示すバッジ
+ *
+ * - 中身は #badge の data-state (building | error) で切り替え、ok のときはフェードアウトする
+ * - 幅は内容に合わせて変わる（auto のままでは transition しないので、main.ts が幅を測って動かす）
+ */
+#badge {
+  --duration: 200ms;
   position: fixed;
   top: 12px;
   right: 12px;
-  margin: 0;
-  padding: 4px 12px;
+  z-index: 1;
+  display: grid;
+  box-sizing: border-box;
+  padding: 6px 12px 6px 9px;
+  overflow: hidden;
+  border: 0;
   border-radius: 999px;
-  background: var(--accent);
-  color: var(--on-color);
+  background: var(--badge-bg);
+  color: var(--badge-fg);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
+  font: inherit;
+  font-weight: 600;
+  white-space: nowrap;
+  transition-duration: var(--duration);
+  transition-property: width, background-color, color, opacity, visibility;
 }
 
-/* エラーの有無でページ位置を変えたくないため、本文の上に重ねて表示する */
-#build-error {
-  position: fixed;
-  inset: 0 0 auto;
-  z-index: 1;
+body[data-state='ok'] #badge {
+  opacity: 0;
+  visibility: hidden;
+}
+
+#badge[data-state='error'] {
+  background: var(--danger);
+  color: var(--on-danger);
+  cursor: pointer;
+}
+
+#badge .content {
+  position: absolute;
+  grid-area: 1 / 1;
+  justify-self: center;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity var(--duration);
+}
+
+#badge[data-state='building'] .building,
+#badge[data-state='error'] .error {
+  position: static;
+  opacity: 1;
+}
+
+#badge .label {
+  text-box: trim-both cap alphabetic;
+}
+
+#badge .icon {
+  width: 16px;
+  height: 16px;
+  background-color: currentColor;
+  mask: center / contain no-repeat;
+}
+
+#badge .spinner {
+  mask-image: url('./src/LoaderCircle.svg');
+  animation: spin 1s linear infinite;
+}
+
+#badge .exclamation {
+  mask-image: url('./src/ExclamationCircle.svg');
+}
+
+/* OS で「視差効果を減らす」などを有効にしている人には、ゆっくり回す */
+@media (prefers-reduced-motion: reduce) {
+  #badge .spinner {
+    animation-duration: 3s;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#error-panel {
+  inset: 52px 12px auto auto;
+  width: min(100vw - 62px, 960px);
+  max-height: calc(100vh - 64px);
   margin: 0;
   padding: 12px 16px;
-  max-height: 40vh;
   overflow: auto;
-  background: var(--danger);
-  color: var(--on-color);
+  border: 0;
+  border-radius: 8px;
+  background: var(--panel-bg);
+  color: var(--panel-fg);
+  box-shadow: 0 4px 16px rgb(70 50 50 / 50%);
+  /* 日本語環境の monospace (MS ゴシックなど) は \ を ¥ で描くため、欧文の等幅フォントを先に並べる */
+  font:
+    13px/1.5 ui-monospace,
+    Menlo,
+    Consolas,
+    'Cascadia Mono',
+    monospace;
   white-space: pre-wrap;
 }
