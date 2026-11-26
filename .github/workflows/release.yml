@@ -52,7 +52,12 @@ jobs:
         if: steps.version.outputs.published != 'true'
         run: npm test
 
-      # prepack でビルドし、provenance は Trusted Publishing で自動で付く
+      # npm publish は prepack でビルドする前に bin のファイルの有無を確かめるので、先にビルドしておく
+      - name: Build
+        if: steps.version.outputs.published != 'true'
+        run: npm run build
+
+      # provenance は Trusted Publishing で自動で付く
       - name: Publish
         if: steps.version.outputs.published != 'true'
         run: npm publish
