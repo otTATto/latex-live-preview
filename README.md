@@ -147,6 +147,14 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
 <summary><strong>［補足］ファイルの生成場所について</strong></summary>
 
 - PDF ファイルは `.tex` と同じ場所に生成され、中間ファイルは `.llp/` 内に生成されます
+
+  ```
+  .
+  ├── .llp/           # 中間生成ファイルが入るディレクトリ
+  ├── sample.pdf      # 生成された PDF ファイル
+  └── sample.tex
+  ```
+
 - したがって、`latexmkrc` に書いた `$out_dir` や `$aux_dir` は**無視されます**
 
 </details>
