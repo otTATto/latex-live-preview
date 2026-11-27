@@ -4,6 +4,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@ottatto/llp"><img src="https://img.shields.io/npm/v/@ottatto/llp?logo=npm&style=for-the-badge" alt="npm"></a>
+  <a href="https://github.com/otTATto/latex-live-preview/releases"><img src="https://img.shields.io/github/v/release/otTATto/latex-live-preview?logo=github&style=for-the-badge" alt="GitHub Release"></a>
   <img src="https://img.shields.io/node/v/@ottatto/llp?logo=nodedotjs&style=for-the-badge" alt="Node.js">
   <a href="https://github.com/otTATto/latex-live-preview/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@ottatto/llp?style=for-the-badge" alt="License"></a>
 </p>
@@ -127,7 +128,32 @@ An editor-agnostic CLI for (almost) live $\LaTeX$ PDF previews, powered by [Late
 </details>
 
 <details>
-<summary><strong>TIP 6: Uninstall the llp command</strong></summary>
+<summary><strong>TIP 6: A package is not found</strong></summary>
+
+- An error like ``! LaTeX Error: File `xcolor.sty' not found.`` means that a package your document uses is not installed in TeX Live
+- If you use [stex](https://github.com/otTATto/setup-tex), you can install the missing packages as follows
+
+  1. Put a `DEPENDS.txt` next to the `.tex` file, listing the packages you use as `hard <pkg>` lines
+
+     ```txt
+     # DEPENDS.txt
+     hard xcolor
+     ```
+
+  2. Run the following in the directory with `DEPENDS.txt`
+
+     ```sh
+     stex depends
+     ```
+
+  3. Run `llp` again (if it is still running, saving the `.tex` file again rebuilds it)
+
+- To find which package provides a `.sty` file, run `tlmgr search --global --file /xcolor.sty`
+
+</details>
+
+<details>
+<summary><strong>TIP 7: Uninstall the llp command</strong></summary>
 
 1. Run the following anywhere in your terminal
 

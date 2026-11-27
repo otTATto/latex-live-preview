@@ -4,6 +4,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@ottatto/llp"><img src="https://img.shields.io/npm/v/@ottatto/llp?logo=npm&style=for-the-badge" alt="npm"></a>
+  <a href="https://github.com/otTATto/latex-live-preview/releases"><img src="https://img.shields.io/github/v/release/otTATto/latex-live-preview?logo=github&style=for-the-badge" alt="GitHub Release"></a>
   <img src="https://img.shields.io/node/v/@ottatto/llp?logo=nodedotjs&style=for-the-badge" alt="Node.js">
   <a href="https://github.com/otTATto/latex-live-preview/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@ottatto/llp?style=for-the-badge" alt="License"></a>
 </p>
@@ -128,7 +129,32 @@
 </details>
 
 <details>
-<summary><strong>補足⑥ llp コマンドを削除したい</strong></summary>
+<summary><strong>補足⑥ パッケージが見つからないと言われちゃった</strong></summary>
+
+- ``! LaTeX Error: File `xcolor.sty' not found.`` のようなエラーは、文書で使っているパッケージが TeX Live に入っていないことを表します
+- [stex](https://github.com/otTATto/setup-tex) を使っている場合は、以下の手順で足りないパッケージを入れられます
+
+  1. `.tex` の横に、使うパッケージを `hard <pkg>` 行で並べた `DEPENDS.txt` を用意します
+
+     ```txt
+     # DEPENDS.txt
+     hard xcolor
+     ```
+
+  2. `DEPENDS.txt` のあるディレクトリで、以下を実行します
+
+     ```sh
+     stex depends
+     ```
+
+  3. もう一度 `llp` を実行します（起動したままなら、`.tex` を保存し直すとビルドし直します）
+
+- `.sty` のファイル名から入れるべきパッケージ名を調べたいときは、`tlmgr search --global --file /xcolor.sty` のように実行します
+
+</details>
+
+<details>
+<summary><strong>補足⑦ llp コマンドを削除したい</strong></summary>
 
 1. 端末の任意の場所で以下を実行します
 
