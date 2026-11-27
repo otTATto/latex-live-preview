@@ -44,10 +44,10 @@ An editor-agnostic CLI for (almost) live $\LaTeX$ PDF previews, powered by [Late
 
   ```sh
   cd path/to/directory
-  npx @ottatto/llp
+  npx @ottatto/llp@latest
   ```
 
-- In that case, read `llp` in the rest of this README as `npx @ottatto/llp`
+- In that case, read `llp` in the rest of this README as `npx @ottatto/llp@latest`
 
 </details>
 

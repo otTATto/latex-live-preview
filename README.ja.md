@@ -44,10 +44,10 @@
 
   ```sh
   cd path/to/directory
-  npx @ottatto/llp
+  npx @ottatto/llp@latest
   ```
 
-- ただし、以降の説明における `llp` を `npx @ottatto/llp` に読み替えて実行する必要があります
+- ただし、以降の説明における `llp` を `npx @ottatto/llp@latest` に読み替えて実行する必要があります
 
 </details>
 
