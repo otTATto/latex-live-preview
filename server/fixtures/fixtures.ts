@@ -7,7 +7,7 @@ import { copyFileSync, mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-export type FixtureName = 'sample.tex' | 'error.tex';
+export type FixtureName = 'sample.tex' | 'error.tex' | 'missing.tex';
 
 /**
  * @function フィクスチャのパスを返す

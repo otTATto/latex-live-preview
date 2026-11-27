@@ -43,16 +43,23 @@ export const outputPaths = (texPath: string) => {
  * @function latexmk で .tex をビルドする
  *
  * @param texPath ビルドする .tex ファイルの絶対パス
+ * @param options.force latexmk に -g を付け、前回の状態にかかわらずビルドし直すかどうか
  * @returns ビルドの結果
  *
  * NOTE:
  *   - latexmk は .tex のディレクトリで実行するので、そこにある latexmkrc が使われる
  *   - 出力先はコマンドラインで .llp/ に固定するので、latexmkrc の $out_dir と $aux_dir は効かない
+ *   - latexmk は前回失敗すると、ソースが変わるまでビルドし直さない
+ *     足りないパッケージを入れたあとなどは、force でビルドし直させる
  */
-export const runLatexmk = (texPath: string): Promise<BuildResult> => {
+export const runLatexmk = (
+  texPath: string,
+  { force = false }: { force?: boolean } = {},
+): Promise<BuildResult> => {
   const paths = outputPaths(texPath);
   prepareOutDir(paths.outDir);
   const args = [
+    ...(force ? ['-g'] : []),
     '-interaction=nonstopmode',
     '-halt-on-error',
     `-auxdir=${OUT_DIR_NAME}`,

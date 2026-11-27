@@ -43,6 +43,9 @@ export const llp = ({ texPath }: { texPath: string }): Plugin => {
       // ビルド中に変更があったら、終わってからもう 1 回だけビルドする
       let building = false;
       let pending = false;
+      // このプロセスで直前のビルドが成功していなければ、latexmk に前回の失敗を引きずらせない
+      // (起動前の .llp/ の状態は分からず、失敗のあとにパッケージを入れても .tex は変わらないため)
+      let lastSucceeded = false;
       const build = async () => {
         if (building) {
           pending = true;
@@ -50,7 +53,8 @@ export const llp = ({ texPath }: { texPath: string }): Plugin => {
         }
         building = true;
         setStatus({ ...status, state: 'building' });
-        const result = await runLatexmk(texPath);
+        const result = await runLatexmk(texPath, { force: !lastSucceeded });
+        lastSucceeded = result.ok;
         const seconds = result.seconds.toFixed(1);
         if (result.ok) {
           logger.info(`✅ build succeeded in ${seconds}s`, { timestamp: true });
