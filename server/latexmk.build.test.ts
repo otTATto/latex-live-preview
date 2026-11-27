@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync, rmSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { delimiter, join } from 'node:path';
 import { afterEach, describe, it } from 'node:test';
 import { copyFixture } from './fixtures/fixtures.ts';
 import { copyPdf, runLatexmk, summarizeError } from './latexmk.ts';
@@ -53,5 +53,26 @@ describe('runLatexmk', { timeout: 120_000 }, () => {
 
     if (result.ok) assert.fail('build should fail');
     assert.equal(summarizeError(result.error), '! Undefined control sequence. (l.5)');
+  });
+
+  it('失敗のあとにパッケージを入れても、force ならビルドし直して成功する', async () => {
+    const fixture = copyFixture('missing.tex');
+    dir = fixture.dir;
+    // TeX Live にパッケージを入れる代わりに、.tex のディレクトリの外の TEXINPUTS にあとから .sty を置く
+    const texinputs = join(dir, 'texinputs');
+    mkdirSync(texinputs);
+    const saved = process.env.TEXINPUTS;
+    process.env.TEXINPUTS = `${texinputs}${delimiter}`;
+    try {
+      assert.equal((await runLatexmk(fixture.texPath)).ok, false);
+      writeFileSync(join(texinputs, 'llpmissing.sty'), '\\ProvidesPackage{llpmissing}\n');
+
+      // .tex が変わっていないので、force なしでは latexmk が前回の失敗を返すだけになる
+      assert.equal((await runLatexmk(fixture.texPath)).ok, false);
+      assert.equal((await runLatexmk(fixture.texPath, { force: true })).ok, true);
+    } finally {
+      if (saved === undefined) delete process.env.TEXINPUTS;
+      else process.env.TEXINPUTS = saved;
+    }
   });
 });

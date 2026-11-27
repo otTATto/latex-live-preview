@@ -52,7 +52,8 @@ if (!texPath) process.exit(130);
 
 if (cli.command === 'build') {
   logger.info(`📄 target: ${relative(process.cwd(), texPath)}`, { timestamp: true });
-  const result = await runLatexmk(texPath);
+  // 前回の .llp/ の状態は分からないので、前回の失敗を引きずらずにビルドし直す
+  const result = await runLatexmk(texPath, { force: true });
   const seconds = result.seconds.toFixed(1);
   if (!result.ok) {
     // CI などで原因を追えるよう、要約ではなくエラーの全文を出す
