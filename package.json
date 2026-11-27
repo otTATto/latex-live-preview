@@ -1,6 +1,6 @@
 {
   "name": "@ottatto/llp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A CLI tool that previews LaTeX PDFs in the browser.",
   "keywords": [
     "latex",
