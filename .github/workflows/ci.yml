@@ -75,7 +75,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: otTATto/tex-setup@v1
+      - uses: otTATto/setup-tex@v1
 
       - uses: actions/setup-node@v7
         with:
@@ -107,7 +107,7 @@ jobs:
       - uses: actions/checkout@v7
 
       - if: runner.os == 'Linux'
-        uses: otTATto/tex-setup@v1
+        uses: otTATto/setup-tex@v1
 
       - uses: actions/setup-node@v7
         with:

@@ -15,7 +15,7 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
 ## 🚀 使い方
 
 > [!IMPORTANT]
-> あらかじめ [TeX Live のセットアップ](https://github.com/otTATto/tex-setup) と Node.js（22.13 以降）が必要になります。
+> あらかじめ [TeX Live のセットアップ](https://github.com/otTATto/setup-tex) と Node.js（22.13 以降）が必要になります。
 
 1. 以下を実行して、端末の任意の場所から `llp` コマンドを使えるようにします
 
@@ -220,7 +220,7 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
   | コマンド             | 内容                                         | 備考                                                                       |
   | :------------------- | :------------------------------------------- | :------------------------------------------------------------------------- |
   | `npm test`           | 単体テストを実行します                       |                                                                            |
-  | `npm run test:build` | PDF をコンパイルするビルドテストを実行します | [TeX Live のセットアップ](https://github.com/otTATto/tex-setup) が必要です |
+  | `npm run test:build` | PDF をコンパイルするビルドテストを実行します | [TeX Live のセットアップ](https://github.com/otTATto/setup-tex) が必要です |
 
 </details>
 
