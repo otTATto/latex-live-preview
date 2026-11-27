@@ -10,123 +10,124 @@
   <a href="https://mozilla.github.io/pdf.js/"><img src="https://img.shields.io/npm/dependency-version/@ottatto/llp/pdfjs-dist?label=pdf.js&logo=mozilla&style=for-the-badge" alt="PDF.js"></a>
 </p>
 
-$\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレビューするためのコマンドラインツールです。
+English | [日本語](README.ja.md)
 
-## 🚀 使い方
+A command-line tool that previews $\LaTeX$ PDFs in the browser in (almost) real time.
+
+## 🚀 Usage
 
 > [!IMPORTANT]
-> あらかじめ [TeX Live のセットアップ](https://github.com/otTATto/setup-tex) と Node.js（22.13 以降）が必要になります。
+> [TeX Live](https://github.com/otTATto/setup-tex) and Node.js (22.13 or later) are required.
 
-1. 以下を実行して、端末の任意の場所から `llp` コマンドを使えるようにします
+1. Run the following to make the `llp` command available anywhere in your terminal
 
    ```sh
    npm install -g @ottatto/llp
    ```
 
-2. プレビューしたい `.tex` ファイルが置かれている場所で、以下のように `llp` コマンドを実行します
+2. Run the `llp` command where the `.tex` file you want to preview is located
 
    ```sh
    cd path/to/directory
    llp
    ```
 
-3. ブラウザが開いて PDF が表示されます
-4. 以降は `.tex` を保存するたびに表示が更新されます
+3. Your browser opens and shows the PDF
+4. From then on, the preview updates every time you save a `.tex` file
 
 <details>
-<summary><strong>補足① インストールせずに試してみたい</strong></summary>
+<summary><strong>TIP 1: Try it without installing</strong></summary>
 
-- 以下のように `npx` を使えば、インストールせずに `llp` コマンドを試せます
+- With `npx`, you can try the `llp` command without installing it
 
   ```sh
   cd path/to/directory
   npx @ottatto/llp
   ```
 
-- ただし、以降の説明における `llp` を `npx @ottatto/llp` に読み替えれて実行する必要があります
+- In that case, read `llp` in the rest of this README as `npx @ottatto/llp`
 
 </details>
 
 <details>
+<summary><strong>TIP 2: Preview a specific .tex file</strong></summary>
 
-<summary><strong>補足② 特定の tex ファイルを指定してプレビューしたい</strong></summary>
-
-- `llp` コマンドは、何も指定しない場合、カレントディレクトリを監視対象とし、その中からビルドする `.tex` ファイルを探します
+- Without arguments, `llp` watches the current directory and looks for the `.tex` file to build in it
 
   ```sh
-  # カレントディレクトリを監視対象とする
+  # Watch the current directory
   llp
   ```
 
-- 候補が複数あり、対話できる場合は、CLI に選択肢が表示され、ユーザーはビルドする対象を選択できます
+- If there are multiple candidates and the terminal is interactive, `llp` lets you choose which one to build
 
-- また、以下のように、あらかじめ特定の `.tex` ファイルやディレクトリのパスを渡して起動することもできます
+- You can also pass the path of a specific `.tex` file or directory
 
   ```sh
-  # 特定のディレクトリを監視対象とする
+  # Watch a specific directory
   llp path/to/directory
 
-  # 特定の .tex ファイルを対象とする
+  # Build a specific .tex file
   llp path/to/specific.tex
   ```
 
 </details>
 
 <details>
-<summary><strong>補足③ プレビューせずに一度だけビルドしたい</strong></summary>
+<summary><strong>TIP 3: Build once without previewing</strong></summary>
 
-- `llp build` を実行すると、プレビュー用のサーバーを立てずに一度だけビルドし、`.tex` と同じ場所に PDF を出力します
+- `llp build` builds once without starting the preview server, and outputs the PDF next to the `.tex` file
 
   ```sh
-  # プレビュー用のサーバーを立てずに一度だけビルドする
+  # Build once without starting the preview server
   llp build
   ```
 
-- ちなみに、`build` という名前のディレクトリをプレビューしたい場合は、`llp ./build` のように書いてください
+- To preview a directory named `build`, write it as `llp ./build`
 
 </details>
 
 <details>
-<summary><strong>補足④ llp コマンドで使用可能なオプションを確認したい</strong></summary>
+<summary><strong>TIP 4: Options of the llp command</strong></summary>
 
-- `llp` コマンドには、以下のオプションが用意されています
+- The `llp` command has the following options
 
-  | オプション              | 説明                                                       | 既定値 |
-  | ----------------------- | ---------------------------------------------------------- | ------ |
-  | `-p`, `--port <number>` | プレビュー用のサーバーのポート番号                         | `1984` |
-  | `--strict-port`         | ポートが使われていたら、次の番号を試さずにエラーで終了する | 無効   |
-  | `--no-open`             | 起動時にブラウザを開かない                                 | 無効   |
-  | `-h`, `--help`          | 使い方を表示する                                           |        |
-  | `-v`, `--version`       | バージョンを表示する                                       |        |
+  | Option                  | Description                                                    | Default  |
+  | ----------------------- | -------------------------------------------------------------- | -------- |
+  | `-p`, `--port <number>` | Port of the preview server                                     | `1984`   |
+  | `--strict-port`         | Exit with an error if the port is in use, instead of moving on | Disabled |
+  | `--no-open`             | Do not open the browser on startup                             | Disabled |
+  | `-h`, `--help`          | Show the usage                                                 |          |
+  | `-v`, `--version`       | Show the version                                               |          |
 
-- ところで、既定のポート番号 `1984` は、[$\LaTeX$ が最初に公開された 1984 年](https://texwiki.texjp.org/?TeX%E3%81%AE%E6%AD%B4%E5%8F%B2) にちなんでいます
-- 指定したポートがすでに使われていた場合、`--strict-port` を指定しない限り、空いている次の番号を使います
+- By the way, the default port `1984` comes from [the year $\LaTeX$ was first released](https://en.wikipedia.org/wiki/LaTeX)
+- If the port is already in use, `llp` uses the next free one unless `--strict-port` is given
 
 </details>
 
 <details>
-<summary><strong>補足⑤ llp コマンドの設定ファイルを書きたい</strong></summary>
+<summary><strong>TIP 5: Write a config file</strong></summary>
 
-- 毎回指定するようなオプションは、設定ファイル `llp.toml` に書いておくことで、手間を減らすことができます
+- Options you use every time can be written in a config file, `llp.toml`
 
   <!-- prettier-ignore -->
   ```toml
   # llp.toml
-  port = 3000            # ポート番号
-  strict-port = false    # ポートが使われていたら、エラーで終了するか
-  open = true            # 起動時にブラウザを開くか
+  port = 3000            # Port number
+  strict-port = false    # Exit with an error if the port is in use
+  open = true            # Open the browser on startup
   ```
 
-- `llp.toml` は、必ずしもコマンドを実行するカレントディレクトリに置かなければならないわけでは**ありません**
-- `.tex` のあるディレクトリから親へさかのぼって探し、最初に見つかったものを使います
-- ちなみに、設定が競合した場合は、コマンドラインのオプション → `llp.toml` → 既定値 の順で優先されます
+- `llp.toml` does **not** have to be in the directory where you run the command
+- `llp` looks for it from the directory of the `.tex` file up through its parents, and uses the first one found
+- When settings conflict, command-line options take precedence over `llp.toml`, which takes precedence over the defaults
 
 </details>
 
 <details>
-<summary><strong>補足⑥ llp コマンドを削除したい</strong></summary>
+<summary><strong>TIP 6: Uninstall the llp command</strong></summary>
 
-1. 端末の任意の場所で以下を実行します
+1. Run the following anywhere in your terminal
 
    ```sh
    npm rm -g @ottatto/llp
@@ -134,108 +135,108 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
 
 </details>
 
-## 🧩 仕組み
+## 🧩 How It Works
 
-`llp` は、以下の流れで PDF を更新します。
+`llp` updates the PDF as follows.
 
-1. `.tex` のあるディレクトリ以下を監視し、ファイルの変更を検知します
-2. `.tex` のあるディレクトリで [Latexmk](https://texwiki.texjp.org/?Latexmk) を実行します
-3. コンパイルの結果を、[Vite](https://ja.vite.dev/) の WebSocket でブラウザに通知します
-4. ブラウザは [PDF.js](https://mozilla.github.io/pdf.js/) で PDF を読み込み直し、見えているページから描画します
+1. Watches the directory of the `.tex` file and detects changes
+2. Runs [Latexmk](https://ctan.org/pkg/latexmk) in the directory of the `.tex` file
+3. Notifies the browser of the build result through the [Vite](https://vite.dev/) WebSocket
+4. The browser reloads the PDF with [PDF.js](https://mozilla.github.io/pdf.js/) and renders the visible pages first
 
 <details>
-<summary><strong>［補足］ファイルの生成場所について</strong></summary>
+<summary><strong>TIP: Where files are generated</strong></summary>
 
-- PDF ファイルは `.tex` と同じ場所に生成され、中間ファイルは `.llp/` 内に生成されます
+- The PDF is generated next to the `.tex` file, and intermediate files go into `.llp/`
 
   ```
   .
-  ├── .llp/           # 中間生成ファイルが入るディレクトリ
-  ├── sample.pdf      # 生成された PDF ファイル
+  ├── .llp/           # Intermediate files
+  ├── sample.pdf      # The generated PDF
   └── sample.tex
   ```
 
-- したがって、`latexmkrc` に書いた `$out_dir` や `$aux_dir` は**無視されます**
+- Therefore, `$out_dir` and `$aux_dir` in your `latexmkrc` are **ignored**
 
 </details>
 
-## 🗂️ リポジトリの構造
+## 🗂️ Repository Structure
 
-大まかには、以下のような構造になっています。
+Roughly, the repository is structured as follows.
 
 ```
 .
-├── bin/llp.js            # llp コマンドの入口
-├── client/               # ブラウザ側（PDF ビューワ）
-├── server/               # サーバー側
-├── shared/               # サーバー側とブラウザ側で共通
-├── dev/                  # 開発用の llp-dev コマンド
-├── dist/                 # npm で配る JS（npm run build で生成）
-├── tsconfig.build.json   # dist/ を出力するための設定
+├── bin/llp.js            # Entry point of the llp command
+├── client/               # Browser side (PDF viewer)
+├── server/               # Server side
+├── shared/               # Shared by the server and browser sides
+├── dev/                  # The llp-dev command for development
+├── dist/                 # JS distributed via npm (generated by npm run build)
+├── tsconfig.build.json   # Config for outputting dist/
 └── README.md
 ```
 
-## 🤝 貢献
+## 🤝 Contributing
 
 <p align="center">
-  <em>LaTeX Live Preview への貢献に興味を持ってくださり、ありがとうございます！💛</em>
+  <em>Thank you 💛 for your interest in contributing to LaTeX Live Preview!</em>
 </p>
 
-1. まずは issue を起票して、方針を [otTATto](https://github.com/otTATto) と相談しましょう
-2. 仕様が固まったら、次章の手順に沿って環境を構築しましょう
-3. 最新の `main` から `feature/*` または `fix/*` ブランチを作り、実装を進めます
-4. コミットメッセージは [Conventional Commits](https://www.conventionalcommits.org/ja/v1.0.0/) に従ってください
-5. Pull Request を出します
-6. CI が通り、[otTATto](https://github.com/otTATto) の承認ののちに `main` に Merge します
-7. 程よいタイミングで [otTATto](https://github.com/otTATto) が新しいバージョンを npm に公開します💪
+1. First, open an issue and discuss the direction with [otTATto](https://github.com/otTATto)
+2. Once the plan is settled, set up your environment following the next section
+3. Create a `feature/*` or `fix/*` branch from the latest `main` and implement your changes
+4. Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) for commit messages
+5. Open a pull request
+6. Once CI passes and [otTATto](https://github.com/otTATto) approves it, it is merged into `main`
+7. [otTATto](https://github.com/otTATto) publishes a new version to npm at a good time 💪
 
-## 🛠️ 開発
+## 🛠️ Development
 
 > [!NOTE]
-> 開発には Node.js（22.18 以降）が必要になります。
+> Development requires Node.js 22.18 or later.
 
-1. このリポジトリを Clone して、依存パッケージを入れ、ビルドします
+1. Clone this repository, install the dependencies, and build
 
    ```sh
    gh repo clone otTATto/latex-live-preview && cd latex-live-preview
    npm install && npm run build
    ```
 
-2. dev ディレクトリに移動し、開発用の llp コマンド `llp-dev` をグローバルにリンクします
+2. Move to the dev directory and globally link `llp-dev`, the llp command for development
 
    ```sh
    cd dev && npm link
    ```
 
-3. リポジトリのルートで以下を実行しておけば、ソースの変更を検知して `dist/` が自動でビルドし直されます
+3. Keep the following running at the repository root, and `dist/` is rebuilt automatically whenever the source changes
 
    ```sh
    cd ../ && npm run dev
    ```
 
-4. 端末の任意の場所で、開発用の llp コマンド `llp-dev` を使用できます
+4. You can now use `llp-dev`, the llp command for development, anywhere in your terminal
 
    ```sh
    llp-dev
    ```
 
 <details>
-<summary><strong>補足① 手元でテストを回したい</strong></summary>
+<summary><strong>TIP 1: Run the tests locally</strong></summary>
 
-- PR を出せば CI で検証されますが、その前に手元の環境での検証も勿論できます
-- 具体的には、次のようなテストが用意されています
+- CI checks your pull request, but you can of course run the tests locally beforehand
+- The following tests are available
 
-  | コマンド             | 内容                                         | 備考                                                                       |
-  | :------------------- | :------------------------------------------- | :------------------------------------------------------------------------- |
-  | `npm test`           | 単体テストを実行します                       |                                                                            |
-  | `npm run test:build` | PDF をコンパイルするビルドテストを実行します | [TeX Live のセットアップ](https://github.com/otTATto/setup-tex) が必要です |
+  | Command              | Description                                       | Note                                                      |
+  | :------------------- | :------------------------------------------------ | :-------------------------------------------------------- |
+  | `npm test`           | Runs the unit tests                               |                                                           |
+  | `npm run test:build` | Runs the build tests, which actually compile PDFs | Requires [TeX Live](https://github.com/otTATto/setup-tex) |
 
 </details>
 
 <details>
-<summary><strong>補足② 開発用の llp-dev コマンドを削除したい</strong></summary>
+<summary><strong>TIP 2: Remove the llp-dev command</strong></summary>
 
-1. 端末の任意の場所で以下を実行します
+1. Run the following anywhere in your terminal
 
    ```sh
    npm rm -g llp-dev
@@ -243,6 +244,6 @@ $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレ
 
 </details>
 
-## 📖 ライセンス
+## 📖 License
 
 [MIT](LICENSE)
