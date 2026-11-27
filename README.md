@@ -1,4 +1,14 @@
-# LaTeX Live Preview
+<h1 align="center">LaTeX Live Preview</h1>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/@ottatto/llp"><img src="https://img.shields.io/npm/v/@ottatto/llp?logo=npm&style=for-the-badge" alt="npm"></a>
+  <img src="https://img.shields.io/node/v/@ottatto/llp?logo=nodedotjs&style=for-the-badge" alt="Node.js">
+  <a href="https://github.com/otTATto/latex-live-preview/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@ottatto/llp?style=for-the-badge" alt="License"></a>
+</p>
+<p align="center">
+  <a href="https://vite.dev/"><img src="https://img.shields.io/npm/dependency-version/@ottatto/llp/vite?logo=vite&style=for-the-badge" alt="Vite"></a>
+  <a href="https://mozilla.github.io/pdf.js/"><img src="https://img.shields.io/npm/dependency-version/@ottatto/llp/pdfjs-dist?label=pdf.js&logo=mozilla&style=for-the-badge" alt="PDF.js"></a>
+</p>
 
 $\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレビューするためのコマンドラインツールです。
 
