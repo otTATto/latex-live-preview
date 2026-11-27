@@ -5,6 +5,7 @@
   "timezone": "Asia/Tokyo",
   "schedule": ["* 0-8 * * 5"],
   "minimumReleaseAge": "3 days",
+  "labels": ["dependencies"],
   "packageRules": [
     {
       "description": "開発用依存の minor または patch 更新なら 1 PR にまとめる",

@@ -1,13 +1,14 @@
 name: Release
 
-# v0.1.1 のようなタグを push すると、npm に公開する
+# v0.1.1 のようなタグを push すると、npm に公開して GitHub Release を作る
 # npm のトークンは使わず、Trusted Publishing (GitHub Actions の OIDC) で認証する
 on:
   push:
     tags: ['v*']
 
 permissions:
-  contents: read
+  # GitHub Release を作るのに必要
+  contents: write
   # Trusted Publishing と provenance に必要
   id-token: write
 
@@ -61,3 +62,18 @@ jobs:
       - name: Publish
         if: steps.version.outputs.published != 'true'
         run: npm publish
+
+      # リリースノートは PR から自動生成する (分類は .github/release.yml)
+      # 手で公開した版のタグでも、まだ Release がなければ作る
+      - name: Create GitHub Release
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            echo "::notice::release $GITHUB_REF_NAME already exists"
+            exit 0
+          fi
+          flags=(--generate-notes --verify-tag)
+          # v0.2.0-beta.1 のような版はプレリリースにする
+          if [[ "$GITHUB_REF_NAME" == *-* ]]; then flags+=(--prerelease); fi
+          gh release create "$GITHUB_REF_NAME" "${flags[@]}"
+        env:
+          GH_TOKEN: ${{ github.token }}
