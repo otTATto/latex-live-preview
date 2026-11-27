@@ -1,5 +1,7 @@
 <h1 align="center">LaTeX Live Preview</h1>
 
+<p align="center"><strong><em>Your editor. Your LaTeX. Live in your browser.</em></strong></p>
+
 <p align="center">
   <a href="https://www.npmjs.com/package/@ottatto/llp"><img src="https://img.shields.io/npm/v/@ottatto/llp?logo=npm&style=for-the-badge" alt="npm"></a>
   <img src="https://img.shields.io/node/v/@ottatto/llp?logo=nodedotjs&style=for-the-badge" alt="Node.js">
@@ -12,7 +14,7 @@
 
 [English](README.md) | 日本語
 
-$\LaTeX$ の PDF をブラウザで（ほぼほぼ）リアルタイムにプレビューするためのコマンドラインツールです。
+好きなエディタで $\LaTeX$ の PDF を（ほぼほぼ）リアルタイムにプレビューできるコマンドラインツールです。[Latexmk](https://texwiki.texjp.org/?Latexmk)・[Vite](https://ja.vite.dev/)・[PDF.js](https://mozilla.github.io/pdf.js/) を使っています。
 
 ## 🚀 使い方
 

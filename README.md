@@ -1,5 +1,7 @@
 <h1 align="center">LaTeX Live Preview</h1>
 
+<p align="center"><strong><em>Your editor. Your LaTeX. Live in your browser.</em></strong></p>
+
 <p align="center">
   <a href="https://www.npmjs.com/package/@ottatto/llp"><img src="https://img.shields.io/npm/v/@ottatto/llp?logo=npm&style=for-the-badge" alt="npm"></a>
   <img src="https://img.shields.io/node/v/@ottatto/llp?logo=nodedotjs&style=for-the-badge" alt="Node.js">
@@ -12,7 +14,7 @@
 
 English | [日本語](README.ja.md)
 
-A command-line tool that previews $\LaTeX$ PDFs in the browser in (almost) real time.
+An editor-agnostic CLI for (almost) live $\LaTeX$ PDF previews, powered by [Latexmk](https://ctan.org/pkg/latexmk), [Vite](https://vite.dev/), and [PDF.js](https://mozilla.github.io/pdf.js/).
 
 ## 🚀 Usage
 
